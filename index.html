@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Meu Portfólio</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #0c0909;
+      color: #ecece8;
+      text-shadow: 1px 1px 5px #eeeded, 0 0 10px #000a;
+      overflow-x: hidden;
+    }
+    /* Fundo RGB dinâmico reativo à rolagem */
+    .background-rgb {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -2;
+      pointer-events: none;
+      transition: background 0.4s;
+      will-change: background;
+      opacity: 0.25;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 24px 18px 60px 18px;
+      background: rgba(24,24,24,0.77);
+      border-radius: 18px;
+      box-shadow: 0 0 24px #000a;
+      position: relative;
+      z-index: 1;
+      text-shadow: 1px 1px 8px #000a;
+      transition: background .25s;
+      /* REMOVIDO backdrop-filter */
+    }
+    header {
+      text-align: center;
+      margin-bottom: 36px;
+      position: relative;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-shadow: 1px 1px 10px #000a;
+    }
+    /* FOTO/AVATAR ESTILO JANELA REDONDA */
+    .avatar-janela {
+      width: 126px;
+      height: 126px;
+      border-radius: 50%;
+      border: 5px solid;
+      background: linear-gradient(145deg, #ffe066 40%, #ffed8f 60%, #232323 100%);
+      /* Combina com amarelo da página + escuro */
+      box-shadow: 0 0 18px #ffe06670, 0 0 11px #23232355;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 22px auto;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow .25s, border-color .22s;
+      animation: avatarFadeIn 1.1s cubic-bezier(.47,.67,.32,1.31);
+    }
+    .avatar-janela img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+      box-shadow: 0 2px 10px #2226;
+      filter: brightness(1.03) drop-shadow(0 4px 8px #000a);
+      transition: filter .18s;
+    }
+    .avatar-janela:hover, .avatar-janela:focus {
+      border-color: #f1f102;
+      box-shadow: 0 0 34px #ffe066bb, 0 0 22px #23232388;
+    }
+    @keyframes avatarFadeIn {
+      from { opacity: 0; transform: scale(.8);}
+      to { opacity: 1; transform: scale(1);}
+    }
+
+    #inicio {
+      font-size: 1.12rem;
+      margin: 18px 0 12px 0;
+      line-height: 1.6;
+      font-family: 'Courier New', Courier, monospace;
+      color-scheme: yellow;
+      color: #ffffff;
+      text-shadow: 2px 1px 8px #000a, 0 0 8px #222a;
+    }
+
+    .linguagens-destaque-bloco {
+      display: flex;
+      align-items: stretch;
+      margin-top: 18px;
+      margin-bottom: 24px;
+      justify-content: flex-start;
+      width: 100%;
+      max-width: 650px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .wallpaper-linguagens {
+      width: 400px;
+      min-width: 180px;
+      max-width: 360px;
+      height: 420px;
+      border-radius: 20px;
+      border: 3px solid #ffe066cc;
+      box-shadow: 0 0 21px #86868544, 0 0 18px #000a;
+      object-fit: cover;
+      margin-right: 32px;
+      margin-top: 0;
+      margin-bottom: 0;
+      background: #232323;
+      transition: box-shadow .18s, border-color .18s, transform .16s;
+      align-self: stretch;
+      display: block;
+    }
+    .wallpaper-linguagens:hover {
+      box-shadow: 0 0 30px #ffe06699, 0 0 28px #000c;
+      border-color: #f1f102;
+      transform: scale(1.035);
+    }
+    .lista-normal {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 12px 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .lista-normal li {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+      font-size: 1.15rem;
+      font-weight: bold;
+      letter-spacing: .03em;
+      background: none;
+      text-shadow: 1px 1px 6px #000a, 0 0 8px #222a;
+    }
+    .lista-normal li .lang-icon,
+    .php-elephant {
+      width: 32px;
+      height: 32px;
+      margin-left: 8px;
+      margin-right: 2px;
+      vertical-align: middle;
+      flex-shrink: 0;
+      filter: drop-shadow(0 3px 10px #0009) brightness(1.1);
+      transition: filter .23s, transform .2s;
+    }
+    .php-elephant:hover, .lista-normal li .lang-icon:hover {
+      filter: drop-shadow(0 7px 22px #ffe066bb) brightness(1.25);
+      transform: scale(1.13) rotate(-6deg);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-left: 0;
+      transition: gap .2s;
+    }
+    .card {
+      background: #232323;
+      border-radius: 20px;
+      box-shadow: 0 2px 14px #0005;
+      padding: 18px 16px 16px 16px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      transition: transform .19s cubic-bezier(.19,1.1,.44,1.08), box-shadow .16s;
+      text-shadow: 1px 1px 8px #000a, 0 0 8px #222a;
+      filter: none;
+      will-change: transform, box-shadow;
+    }
+    .card:hover {
+      transform: scale(1.055) translateY(-13px) !important;
+      box-shadow: 0 10px 38px #ffe06644, 0 3px 18px #0007;
+      filter: none;
+      z-index: 2;
+    }
+    .card h3 {
+      margin-top: 0;
+      color: #ffe066;
+      text-shadow: 1px 1px 12px #000a;
+    }
+    .card a {
+      display: inline-block;
+      margin-top: 8px;
+      color: #ffe066;
+      font-weight: bold;
+      text-decoration: none;
+      padding: 4px 10px;
+      border-radius: 5px;
+      background: #181818;
+      transition: background .18s, color .18s;
+      text-shadow: 1px 1px 7px #000a;
+    }
+    .card a:hover {
+      background: #ffe066;
+      color: #232323;
+    }
+    .long-description ul {
+      margin-left: 12px;
+      padding-left: 12px;
+    }
+    .python-projeto, .java-projeto {
+      height: 42px;
+      width: 42px;
+      margin-bottom: -4px;
+      filter: drop-shadow(0 2px 8px #000b) brightness(1.15);
+      transition: filter .2s, transform .18s;
+    }
+    .python-projeto:hover, .java-projeto:hover {
+      filter: drop-shadow(0 6px 24px #ffe066bb) brightness(1.18);
+      transform: scale(1.17) rotate(-6deg);
+    }
+    .python-projeto.interact-blur, .java-projeto.interact-blur {
+      filter: drop-shadow(0 2px 8px #000b) brightness(1.25) !important;
+    }
+
+    .decora-icon {
+      position: fixed;
+      z-index: 0;
+      opacity: 0.16;
+      pointer-events: none;
+      width: 44px;
+      height: 34px;
+      transition: opacity .2s, filter .2s, transform .35s cubic-bezier(.22,1.2,.56,1.08);
+      filter: drop-shadow(0 4px 12px #000c);
+      will-change: transform, filter, opacity;
+    }
+    .decora-python1 { top: 2vw; left: 3vw; }
+    .decora-python2 { bottom: 18vh; right: 5vw; }
+    .decora-java1 { top: 12vh; left: 12vw; }
+    .decora-java2 { top: 72vh; left: 80vw; }
+    .decora-js1 { bottom: 12vh; left: 8vw; }
+    .decora-js2 { top: 22vh; right: 9vw; }
+    .decora-html1 { bottom: 8vh; right: 3vw; }
+    .decora-html2 { top: 8vh; right: 15vw; }
+    .decora-css1 { bottom: 5vh; left: 18vw; }
+    .decora-css2 { top: 55vh; right: 2vw; }
+    .decora-sqlite1 { bottom: 38vh; left: 4vw; }
+    .decora-sqlite2 { top: 44vh; right: 18vw; }
+    .decora-php1 { bottom: 20vh; right: 25vw; }
+    .decora-php2 { top: 17vh; left: 56vw; }
+
+    .contact-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 17px;
+      margin: 30px 0 10px 0;
+      padding: 6px 0;
+      background: #2224;
+      border-radius: 14px;
+      box-shadow: 0 0 12px #ffe06633;
+      filter: drop-shadow(0 2px 9px #000c);
+      transition: filter .25s;
+      width: 100%;
+      max-width: 250px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .contact-section a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #232323;
+      border-radius: 50%;
+      width: 37px;
+      height: 37px;
+      box-shadow: 0 1px 6px rgba(206, 189, 189, 0.6);
+      transition: background .15s, box-shadow .15s, transform .12s;
+      margin: 0 2px;
+      text-decoration: none;
+    }
+    .contact-section a:hover {
+      background: #ffe066;
+      transform: scale(1.09);
+      box-shadow: 0 2px 18px #ffe06644;
+    }
+    .contact-section svg {
+      width: 20px;
+      height: 20px;
+      fill: #ffe066;
+      transition: fill .15s, transform .25s cubic-bezier(.33,1.3,.43,1.11);
+      will-change: transform, fill;
+    }
+    .contact-section a:hover svg {
+      fill: #232323;
+      transform: scale(1.2);
+    }
+
+    @media (max-width: 1000px) {
+      .wallpaper-linguagens {
+        width: 160px;
+        min-width: 100px;
+        max-width: 220px;
+        height: 200px;
+        margin-right: 200px;
+      }
+      .lista-normal li .lang-icon,
+      .php-elephant {
+        width: 21px;
+        height: 21px;
+      }
+      .python-projeto, .java-projeto {
+        width: 33px;
+        height: 33px;
+      }
+      .avatar-janela {
+        width: 80px;
+        height: 80px;
+      }
+    }
+    @media (max-width: 600px) {
+      .wallpaper-linguagens {
+        width: 80px;
+        min-width: 42px;
+        max-width: 90px;
+        height: 70px;
+        border-width: 2px;
+        margin-right: 10px;
+      }
+      .lista-normal li .lang-icon,
+      .php-elephant,
+      .python-projeto,
+      .java-projeto {
+        width: 15px;
+        height: 15px;
+      }
+      .decora-icon { width: 22px; height: 16px; }
+      .contact-section { gap: 7px; max-width: 150px; }
+      .contact-section a { width: 23px; height: 23px;}
+      .contact-section svg { width: 13px; height: 13px;}
+      .avatar-janela {
+        width: 54px;
+        height: 54px;
+      }
+    }
+
+    .nome{
+      font-family: 'Courier New', Courier, monospace;
+      color: #ffffff;
+      text-shadow: 2px 2px 10px #000a, 0 0 16px #ffe06666;
+    }
+    .MYP{
+      text-align: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size-adjust: inherit;
+      font-size: xx-large;
+      border-color: #7906e6;
+      animation-duration: 4s;
+    }
+    .fade-up {
+      opacity: 0;
+      transform: translateX(-70px) scale(1.02);
+      animation: fadeRight 1.55s cubic-bezier(.47,.67,.32,1.31) forwards;
+      animation-delay: var(--delay, 0s);
+    }
+    @keyframes fadeRight {
+      to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+      }
+    }
+    .side-bar { display: none !important; }
+    .Py1 { height: min-content; }
+    .ja1 { height: min-content; }
+      .pequeno {
+    width: 26px;
+    height: 26px;
+    vertical-align: middle;
+    margin-left: 4px;
+    margin-right: 4px;
+    filter: drop-shadow(0 1px 3px #0008) brightness(1.08);
+    transition: filter .19s, transform .14s;
+  }
+  .pequeno:hover {
+    filter: drop-shadow(0 4px 12px #ffe066aa) brightness(1.15);
+    transform: scale(1.15) rotate(-7deg);
+  }
+  @media (max-width: 600px) {
+    .pequeno {
+      width: 15px;
+      height: 15px;
+    }
+  }
+  </style>
+</head>
+<body>
+  <div class="background-rgb"></div>
+
+  <!-- ÍCONES DECORATIVOS ESPALHADOS -->
+  <img class="decora-icon decora-python1" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python">
+  <img class="decora-icon decora-python2" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python">
+  <img class="decora-icon decora-java1" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" alt="Java">
+  <img class="decora-icon decora-java2" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" alt="Java">
+  <img class="decora-icon decora-js1" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript">
+  <img class="decora-icon decora-js2" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript">
+  <img class="decora-icon decora-html1" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5">
+  <img class="decora-icon decora-html2" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5">
+  <img class="decora-icon decora-css1" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3">
+  <img class="decora-icon decora-css2" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3">
+  <img class="decora-icon decora-sqlite1" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg" alt="SQLite">
+  <img class="decora-icon decora-sqlite2" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg" alt="SQLite">
+  <!-- PHP símbolo clássico (oval cinza) -->
+  <img class="decora-icon decora-php1" src="http://www.zettaomnis.net.br/portal/images/zost/ourproducts/php/php.png" alt="PHP Simbolo">
+  <img class="decora-icon decora-php2" src="http://www.zettaomnis.net.br/portal/images/zost/ourproducts/php/php.png" alt="PHP Simbolo">
+
+  <main>
+    <header class="fade-up" style="--delay: 0.05s">
+      <h1 class="nome">LUÍS FILIPE MOREIRA NOVAIS &#x1F468;&#x1F3FB;&#x200D;&#x1F4BB;</h1>
+      <!-- JANELA REDONDA PARA FOTO/AVATAR ABAIXO DO NOME -->
+      <div class="avatar-janela">
+        <!-- Troque o src da img abaixo pela sua foto -->
+        <img src="https://img.freepik.com/vetores-gratis/hacker-operando-uma-ilustracao-do-icone-dos-desenhos-animados-laptop-conceito-de-icone-de-tecnologia-isolado-estilo-flat-cartoon_138676-2387.jpg" alt="Sua Foto de Perfil">
+      </div>
+      <p id="inicio">
+        Cursando Bacharelado em Sistemas de informações (Campus IFBA-Vitória da Conquista).
+        <br>
+        Sou um programador jovem com 19 anos com experiência em linguagens como:
+        <div class="linguagens-destaque-bloco">
+          <img class="wallpaper-linguagens" src="https://static.vecteezy.com/system/resources/previews/003/334/890/non_2x/desktop-source-code-and-wallpaper-by-coding-and-programming-free-photo.jpg" alt="Wallpaper linguagens">
+          <ul class="lista-normal">
+            <li class="java">
+              <span class="lang-inicial">J</span>ava
+              <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" alt="Java">
+            </li>
+            <li class="python">
+              <span class="lang-inicial">P</span>ython
+              <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python">
+            </li>
+            <li class="javascript">
+              <span class="lang-inicial">J</span>avaScript
+              <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript">
+            </li>
+            <li class="html">
+              <span class="lang-inicial">H</span>TML
+              <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5">
+            </li>
+            <li class="css">
+              <span class="lang-inicial">C</span>SS
+              <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3">
+            </li>
+            <li class="sqlite">
+              <span class="lang-inicial">S</span>QLITE
+              <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg" alt="SQLite">
+            </li>
+            <li class="php">
+              <span class="lang-inicial">P</span>HP(Básico)
+              <!-- PHP símbolo clássico -->
+              <img class="php-elephant" src="http://www.zettaomnis.net.br/portal/images/zost/ourproducts/php/php.png" alt="PHP Simbolo" />
+            </li>
+          </ul>
+        </div>
+       AQUI ESTÁ ALGUNS DOS MEUS PROJETOS,<br>TODOS ELES FIZ COM FOCO NO ESTUDO DE BACKEND EM PYTHON  <img class="python-projeto" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python"> E JAVA , <img class="java-projeto" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" alt="Java"> ESPERO QUE GOSTEM 🖥️.
+      </p>
+    </header>
+    <!-- CONTATO SOCIAL -->
+    <section class="contact-section fade-up" style="--delay: 0.2s">
+      <a href="https://wa.me/5577999081860" target="_blank" title="WhatsApp">
+        <svg viewBox="0 0 32 32"><path d="M16.003 3.002c-7.187 0-13.001 5.814-13.001 13.001 0 2.298.603 4.538 1.746 6.512l-1.831 6.691 6.872-1.803c1.898 1.035 4.023 1.579 6.214 1.579h.001c7.187 0 13.001-5.814 13.001-13.001s-5.814-13.001-13.002-13.001zm6.601 19.6c-.281.781-1.635 1.491-2.261 1.591-.583.087-1.297.124-2.087-.133-.482-.154-1.104-.357-1.904-.7-3.353-1.447-5.544-4.941-5.713-5.184-.166-.241-1.366-1.819-1.366-3.471 0-1.651.87-2.464 1.181-2.803.312-.337.679-.42.904-.42.224 0 .449.002.646.012.208.009.486-.079.76.578.281.675.954 2.332 1.038 2.505.083.174.139.382.025.618-.112.237-.168.382-.331.584-.166.208-.348.463-.497.623-.166.167-.339.351-.145.689.195.337.867 1.432 1.859 2.319 1.279 1.143 2.351 1.497 2.688 1.665.336.168.528.141.721-.083.193-.224.829-.964 1.048-1.297.22-.334.44-.269.746-.165.308.104 1.948.919 2.282 1.085.336.166.559.249.64.387.079.136.079.783-.202 1.564z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/lips.ws" target="_blank" title="Instagram">
+        <svg viewBox="0 0 32 32"><path d="M16 7.2c2.3 0 2.575.008 3.482.05.896.042 1.377.184 1.7.308.423.164.726.36 1.045.68.32.32.516.623.68 1.045.124.323.266.804.308 1.7.042.907.05 1.182.05 3.482s-.008 2.575-.05 3.482c-.042.896-.184 1.377-.308 1.7-.164.423-.36.726-.68 1.045-.32.32-.623.516-1.045.68-.323.124-.804.266-1.7.308-.907.042-1.182.05-3.482.05s-2.575-.008-3.482-.05c-.896-.042-1.377-.184-1.7-.308-.423-.164-.726-.36-1.045-.68-.32-.32-.516-.623-.68-1.045-.124-.323-.266-.804-.308-1.7-.042-.907-.05-1.182-.05-3.482s.008-2.575.05-3.482c.042-.896.184-1.377.308-1.7.164-.423.36-.726.68-1.045.32-.32.623-.516 1.045-.68.323-.124.804-.266 1.7-.308.907-.042 1.182-.05 3.482-.05zm0-2.2c-2.346 0-2.637.009-3.553.052-.915.043-1.54.187-2.086.399-.568.221-.98.487-1.421.928-.441.441-.707.853-.928 1.421-.212.546-.356 1.171-.399 2.086-.043.916-.052 1.207-.052 3.553s.009 2.637.052 3.553c.043.915.187 1.54.399 2.086.221.568.487.98.928 1.421.441.441.853.707 1.421.928.546.212 1.171.356 2.086.399.916.043 1.207.052 3.553.052s2.637-.009 3.553-.052c.915-.043 1.54-.187 2.086-.399.568-.221.98-.487 1.421-.928.441-.441.707-.853.928-1.421.212-.546.356-1.171.399-2.086.043-.916.052-1.207.052-3.553s-.009-2.637-.052-3.553c-.043-.915-.187-1.54-.399-2.086-.221-.568-.487-.98-.928-1.421-.441-.441-.853-.707-1.421-.928-.546-.212-1.171-.356-2.086-.399-.916-.043-1.207-.052-3.553-.052zm0 3.8a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 8.2a3.2 3.2 0 1 1 0-6.4 3.2 3.2 0 0 1 0 6.4zm6.4-8.8a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0z"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/luis-filipe-moreira-novais-a71229362" target="_blank" title="LinkedIn">
+        <svg viewBox="0 0 32 32"><path d="M29 0h-26c-1.7 0-3 1.3-3 3v26c0 1.7 1.3 3 3 3h26c1.7 0 3-1.3 3-3v-26c0-1.7-1.3-3-3-3zm-17 27h-5v-13h5v13zm-2.5-14.5c-1.6 0-2.5-1.1-2.5-2.4 0-1.4.9-2.4 2.4-2.4 1.5 0 2.5 1 2.5 2.4 0 1.3-.9 2.4-2.4 2.4zm17.5 14.5h-5v-7c0-1.8-.6-3-2.2-3-1.2 0-1.9.8-2.2 1.6-.1.2-.1.5-.1.8v7.6h-5s.1-12.4 0-13.7h5v1.9c.7-1 2-2.5 4.8-2.5 3.5 0 6.2 2.3 6.2 7.2v7.1z"/></svg>
+      </a>
+    </section>
+    <section class="projetos fade-up" style="--delay: 0.33s">
+      <h2 class="MYP">Meus Projetos</h2>
+      <div class="cards">
+        <!-- PROJETOS (os mesmos do seu HTML original) -->
+        <div class="card fade-up" style="--delay: 0.4s">
+          <h3>Projeto : BANCO SIMPLES COM PYTHON</h3>
+          <div class="long-description">
+            <p>
+              Esse banco simples fiz graças as aulas do instituto Bradesco
+              <img class="python-projeto" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python">
+            </p>
+            <ul>
+              <li>Funcionalidade 1: Receber saques, extratos e depósitos </li>
+              <li>Funcionalidade 2: Contém o nome de usúario, número de telefone</li>
+            </ul>
+          </div>
+          <a href="https://github.com/DONkay-007/banco-simples" target="_blank">Ver no GitHub</a>
+        </div>
+        <div class="card fade-up" style="--delay: 0.43s">
+          <h3>Projeto Calculadora com Python</h3>
+          <div class="long-description">
+            <p>
+              O projeto fiz com auxílio da biblioteca do kivy do Python
+              <img class="python-projeto" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python">
+                          <ul>
+              <li>Funcionalidades: A calculadora é funcional com todas as operações básicas (soma,subtração,divisão e multiplicação)</li>
+            </ul>
+            </p>
+          </div>
+          <a href="https://github.com/DONkay-007/calculadora-simples" target="_blank">Ver no GitHub</a>
+        </div>
+        <div class="card fade-up" style="--delay: 0.46s">
+          <h3>Projeto : RPG SIMPLES</h3>
+          <div class="long-description">
+            <p>
+              Fzz esse projeto de RPG  em Python sem uso de funçoes apenas com listas e poucas bibliotecas, futuramente aumentarei as funcões dispostas no projeto 
+              <img class="python-projeto" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python">
+                       <ul>
+              <li>Funcionalidades: Esse rpg foi um projeto surgido diretamente de uma ideia desde pequeno, adoraria fazer um jogo nem que seja simples, então fui lá e fiz </li>
+            </ul>
+            </p>
+          </div>
+          <a href="https://github.com/DONkay-007/RPG-simples" target="_blank">Ver no GitHub</a>
+        </div>
+        <div class="card fade-up" style="--delay: 0.49s">
+          <h3>Projeto 4:Jogo da velha </h3>
+          <div class="long-description">
+            <p>
+             Nesse projeto fiz pesquisando como poderia fazer  um jogo da velha em java, me desafiei muito a fazer esse código
+              <img class="java-projeto" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" alt="Java">
+            </p>
+          </div>
+          <a href="https://github.com/seuusuario/projeto4" target="_blank">Ver no GitHub</a>
+        </div>
+        <div class="card fade-up" style="--delay: 0.52s">
+          <h3>Projeto 5: pedra,papel e tesoura</h3>
+          <div class="long-description">
+            <p>
+              Criei um jogo de pedra papel e tesoura em java gostaria de compartilhar com quem tiver interesse.
+              <img class="java-projeto" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" alt="Java">
+            </p>
+            <ul>
+              <li>Funcionalidade: Exemplo de funcionalidade para o projeto 5</li>
+            </ul>
+          </div>
+          <a href="https://github.com/seuusuario/projeto5" target="_blank">Ver no GitHub</a>
+        </div>
+        <div class="card fade-up" style="--delay: 0.55s">
+          <h3>Projeto 6:Portífólio para um advogado</h3>
+          <div class="long-description">
+            <p>
+              criei esse site simples em html e css para uma advogada na área previdenciaria(Ana Beatiz Moreira) para ser um convite a novos clientes.
+              <img class="pequeno" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5">
+              <img class="pequeno" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3">
+            </p>
+            <ul>
+              <li>Funcionalidade: Exemplo de funcionalidade do projeto 6</li>
+            </ul>
+          </div>
+          <a href="https://github.com/seuusuario/projeto6" target="_blank">Ver no GitHub</a>
+        </div>
+        <div class="card fade-up" style="--delay: 0.58s">
+          <h3>Projeto 7:coleta de dados do usuário</h3>
+          <div class="long-description">
+            <p>
+              Esse projeto faz uma página que coleta dados do usuário com o PHP que ao se cadastrar precisar se lemcrar da sua senha gerada
+              <img class="pequeno" src="http://www.zettaomnis.net.br/portal/images/zost/ourproducts/php/php.png" alt="PHP Simbolo">
+
+            </p>
+            <ul>
+              <li>Funcionalidade: Exemplo para o projeto 7</li>
+            </ul>
+          </div>
+          <a href="https://github.com/seuusuario/projeto7" target="_blank">Ver no GitHub</a>
+        </div>
+      </div>
+    </section>
+    <footer class="fade-up" style="--delay: 0.65s">
+      <p>Contato: <a href="mailto:luisfilipemnovais@gmail.com">luisfilipemnovais@gmail.com</a>
+        <a href="https://github.com/seuusuario" target="_blank">GitHub</a>
+      </p>
+    </footer>
+   </main>
+  <script>
+    // Fundo RGB reativo à rolagem
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function getColor(scrollY, winH, idx) {
+      // Três tons, um para cada gradiente, mudam em fase diferente
+      const pct = (scrollY / winH) % 1;
+      // Fases diferentes para cada gradiente
+      const angles = [0, 0.32, 0.57];
+      const base = (pct + angles[idx]) % 1;
+      const r = Math.floor(lerp(180, 255, 0.5 + 0.5 * Math.sin(2 * Math.PI * (base + 0.0))));
+      const g = Math.floor(lerp(180, 255, 0.5 + 0.5 * Math.sin(2 * Math.PI * (base + 0.33))));
+      const b = Math.floor(lerp(80, 240, 0.5 + 0.5 * Math.sin(2 * Math.PI * (base + 0.66))));
+      return `rgb(${r},${g},${b})`;
+    }
+    function updateBgRGB() {
+      const scrollY = window.scrollY || window.pageYOffset;
+      const winH = window.innerHeight || 800;
+      const c1 = getColor(scrollY, winH, 0);
+      const c2 = getColor(scrollY, winH, 1);
+      const c3 = getColor(scrollY, winH, 2);
+      document.querySelector('.background-rgb').style.background =
+        `radial-gradient(circle at 20% 100%, ${c1} 0%, transparent 55%),` +
+        `radial-gradient(circle at 60% 90%, ${c2} 0%, transparent 70%),` +
+        `radial-gradient(circle at 85% 100%, ${c3} 0%, transparent 60%)`;
+    }
+    window.addEventListener('scroll', updateBgRGB);
+    window.addEventListener('resize', updateBgRGB);
+    document.addEventListener('DOMContentLoaded', function() {
+      updateBgRGB();
+      document.querySelectorAll('.fade-up').forEach(function(el) {
+        el.style.animationPlayState = 'running';
+      });
+
+      // Blur nos ícones de linguagens dos projetos
+      const projectImgs = document.querySelectorAll('.python-projeto, .java-projeto');
+      projectImgs.forEach(function(img) {
+        img.addEventListener('mouseenter', function() {
+          img.classList.add('interact-blur');
+        });
+        img.addEventListener('mouseleave', function() {
+          img.classList.remove('interact-blur');
+        });
+        img.addEventListener('touchstart', function(e) {
+          img.classList.add('interact-blur');
+        });
+        img.addEventListener('touchend', function(e) {
+          img.classList.remove('interact-blur');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
